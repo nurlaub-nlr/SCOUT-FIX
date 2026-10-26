@@ -1,0 +1,37 @@
+name: macOS transcript diagnostics
+
+on:
+  push:
+    branches: [diagnostics/macos-transcripts]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installed-viewer:
+    name: ${{ matrix.runner }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+        python: ["3.11", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install the published package with its runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "inspect-scout @ git+https://github.com/nurlaub-nlr/SCOUT-FIX.git@${{ github.sha }}"
+          python -m pip check
+          scout --version
+          python -c "import platform, inspect_scout; print(platform.platform(), platform.machine()); print(inspect_scout.__file__)"
+      - name: Verify transcript listing and contents through browser API
+        run: |
+          python -m pip install pytest pytest-asyncio pytest-xdist
+          # Disable the checkout's pythonpath setting to test the installed package.
+          python -m pytest -n 0 -o pythonpath= tests/view/test_file_uri_transcripts.py -q
