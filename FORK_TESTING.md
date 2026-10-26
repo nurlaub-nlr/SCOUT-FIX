@@ -74,9 +74,9 @@ The viewer assets in this preview are the unmodified assets from the official
   frontend files match upstream 0.6.1 LFS hashes; the frontend submodule is unchanged.
 
 The preview was tested on Windows with Python 3.14.6 and Inspect AI 0.3.285.
-The full upstream suite and cross-platform installation checks remain for
-finalization after the interactive preview test. Dependency deprecation warnings
-were emitted by the targeted tests; there were no test failures.
+Subsequent GitHub installation and cross-platform checks are recorded below.
+Dependency deprecation warnings were emitted by the targeted tests; there were
+no test failures.
 
 Local evidence is in `.venv/preview-tests.xml`, `.venv/preview-smoke.json`, and
 `.venv/preview-build.json`. The wheel is
@@ -96,3 +96,26 @@ now sets that submodule's default update to `none`: Python installations consume
 the existing built viewer assets. Frontend contributors and frontend CI jobs use
 an explicit `git submodule update --init --recursive --checkout` instead. The
 submodule commit and viewer asset content are unchanged.
+
+## macOS validation (October 26, 2026)
+
+[Mac diagnostic workflow run](https://github.com/nurlaub-nlr/SCOUT-FIX/actions/runs/40384571501)
+passed on Apple Silicon (`macos-15`) and Intel (`macos-15-intel`), each with
+Python 3.11 and 3.14. Each job installed the fork directly from GitHub, passed
+`pip check`, and ran all four file-URI listing/content regressions against the
+installed package. Test paths include spaces and accented characters, for both
+directories and individual eval files. These tests use fixture logs and do not
+establish that another user's OneDrive folder or browser session is configured
+correctly.
+
+The separate Linux [Build run](https://github.com/nurlaub-nlr/SCOUT-FIX/actions/runs/40377949819)
+passed these file-URI tests. Its full Python 3.14 suite reported 3,829 passed,
+107 skipped, 2 xpassed, and one failure in
+`tests/test_resultset_expansion.py::test_empty_resultset_expansion`
+(`pyarrow.lib.ArrowNotImplementedError: AppendScalar for type null`). That
+result-set failure remains unresolved; the full suite is not green.
+
+`scripts/diagnose_transcripts.py` helps investigate reports of empty local
+viewers without collecting transcript contents. It was checked against live
+isolated Scout servers with readable, missing, unconfigured, filtered, and empty
+sources, plus a stopped viewer. See the README for usage.

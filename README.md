@@ -70,6 +70,36 @@ The Python package includes the built viewer assets. Node.js and pnpm are needed
 only for frontend development. Git LFS downloads those assets during checkout
 when available; Scout also retains upstream's on-demand asset download fallback.
 
+## When the viewer shows no files
+
+Each computer needs its own runs path. On macOS, use an absolute `/Users/...`
+path that exists on that Mac, or use `"$HOME/..."` in a shell command. A Windows
+`C:/Users/...` path will not work there. A quoted `"~/..."` is not expanded by the
+shell. Check that OneDrive logs are available locally.
+
+Pulling the repository updates the checkout; it does not update an existing
+non-editable installation or a running Scout process. Use the GitHub pip command
+above in the environment that launches Scout, stop that viewer, then restart it.
+
+To diagnose an empty viewer, leave Scout running and run this from the cloned
+SCOUT-FIX repository, using the same Python environment as Scout:
+
+```bash
+python scripts/diagnose_transcripts.py http://127.0.0.1:7577
+```
+
+Replace the URL with your viewer's local address and port (often 7576 or 7577).
+For the environment created above, use `.venv-scout/bin/python` on macOS/Linux
+or `.venv-scout/Scripts/python.exe` on Windows. The script also runs with plain
+Python 3.11+ without installing Scout, but then its package-version details
+will describe that Python environment rather than the running server.
+
+The output reports the selected folder, whether it exists, the number of `.eval`
+files on disk, and transcript counts through the viewer API using both the native
+path and browser URI. It reports whether a project filter is active. It prints
+paths and counts, without transcript contents, and does not change configuration.
+Share this output to distinguish path, installation, filter, and browser issues.
+
 ## Development
 
 To work on development of Inspect Scout, clone the repository and install with the `-e` flag and `[dev]` optional dependencies:
