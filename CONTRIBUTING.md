@@ -7,8 +7,8 @@ Thanks for contributing to Inspect Scout — this guide covers local setup, the 
 Clone the repository and install it editable with the `[dev]` extras. Development tracks `inspect_ai` from `main`, so install that first (this is what CI does):
 
 ```bash
-git clone https://github.com/meridianlabs-ai/inspect_scout
-cd inspect_scout
+git clone https://github.com/nurlaub-nlr/SCOUT-FIX.git
+cd SCOUT-FIX
 pip install git+https://github.com/UKGovernmentBEIS/inspect_ai.git
 pip install -e ".[dev]"
 ```
@@ -20,15 +20,16 @@ Run all Python commands from the project virtualenv (reference `.venv/bin/` dire
 The web UI lives in a git submodule at `src/inspect_scout/_view/ts-mono` (Turborepo + pnpm) and uses Git LFS for binary assets. **This is only needed if you plan to work on the frontend** — Python-only contributors can skip it.
 
 1. [Install Git LFS](https://git-lfs.com/) and run `git lfs install`.
-2. Initialize the submodule and install dependencies:
+2. Explicitly initialize the optional source submodule and install dependencies
+   (normal pip installations use the prebuilt assets):
 
    ```bash
-   git submodule update --init
+   git -c core.longpaths=true submodule update --init --recursive --checkout
    cd src/inspect_scout/_view/ts-mono
    pnpm install
    ```
 
-3. Recommended: `git config submodule.recurse true` so `git pull` keeps the submodule working tree in sync.
+3. For ongoing frontend work, use `git config submodule.src/inspect_scout/_view/ts-mono.update checkout` and `git config submodule.recurse true` so `git pull` keeps the submodule working tree in sync.
 
 See the [submodule guide](src/inspect_scout/_view/ts-mono/docs/submodule-guide.md) for full workflows.
 

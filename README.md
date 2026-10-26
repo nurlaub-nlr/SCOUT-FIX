@@ -7,15 +7,14 @@ addresses before opening the transcript source.
 
 Repository: [nurlaub-nlr/SCOUT-FIX](https://github.com/nurlaub-nlr/SCOUT-FIX).
 
-**Draft status:** local preview testing is in progress. The installation commands
-below are for after the fixed revision has been published to `main`; GitHub
-installation validation is still pending. See [preview notes](FORK_TESTING.md)
-for the completed checks, restart instructions, and known limitations.
+**Published preview:** install this fork from the GitHub URL below. It retains
+the `inspect-scout` package name and `scout` command. See
+[preview notes](FORK_TESTING.md) for validation results and known limitations.
 
 ## Install from GitHub
 
 Requires Python 3.11 or later and Git. Run these commands from the project where
-you want to use Scout, after the fork is published.
+you want to use Scout.
 
 ### PowerShell
 
@@ -45,6 +44,31 @@ on the command line.
 The package and command remain `inspect-scout` and `scout`. This fork retains
 the upstream MIT license. General usage is covered in the
 [upstream documentation](https://meridianlabs-ai.github.io/inspect_scout/).
+
+## Using an existing Scout environment
+
+Run the GitHub install command with the Python interpreter from the environment
+where you already use Scout:
+
+```bash
+python -m pip install --upgrade "inspect-scout @ git+https://github.com/nurlaub-nlr/SCOUT-FIX.git@main"
+scout --version
+python -m pip check
+```
+
+This replaces upstream Scout in that environment. Installing or upgrading plain
+`inspect-scout` from PyPI later can replace the fork, so keep the GitHub requirement
+in your project dependency file. For a reproducible install, replace `@main` with
+the full commit SHA you have tested.
+
+The fork uses upstream's Git-based version calculation, so `scout --version`
+shows a development version such as `0.6.2.dev2` while the code is based on 0.6.1.
+The `0.6.1` tag identifies the unmodified upstream release; use `main` or a fixed
+commit SHA to install the file-path fix.
+
+The Python package includes the built viewer assets. Node.js and pnpm are needed
+only for frontend development. Git LFS downloads those assets during checkout
+when available; Scout also retains upstream's on-demand asset download fallback.
 
 ## Development
 

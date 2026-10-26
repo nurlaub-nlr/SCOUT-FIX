@@ -1,6 +1,6 @@
 # Scout 0.6.1 file URI fix: local preview
 
-This is a draft fork for local testing before the GitHub repository is finalized.
+This fork is published for preview testing and installation from GitHub.
 It is based on the latest published Scout release verified on October 26, 2026:
 [`0.6.1`](https://pypi.org/project/inspect-scout/0.6.1/), upstream commit
 [`9db31e47de985a0f8098f326184efe0a41d5c3a5`](https://github.com/meridianlabs-ai/inspect_scout/tree/9db31e47de985a0f8098f326184efe0a41d5c3a5).
@@ -37,9 +37,9 @@ In the preview:
 The selected GitHub destination is
 [nurlaub-nlr/SCOUT-FIX](https://github.com/nurlaub-nlr/SCOUT-FIX). The local
 `origin` remote points there; `upstream` retains the original Scout repository.
-Publication and a final release tag remain pending the interactive preview test.
-No source changes have been pushed. Draft GitHub installation commands are in
-[README.md](README.md).
+The `main` branch is published, including all historical LFS assets. A separate
+final release tag remains pending preview feedback. GitHub installation commands
+are in [README.md](README.md).
 
 ## Regression checks
 
@@ -87,3 +87,12 @@ Wheel SHA256:
 
 The launch logs are `.venv/scout-preview.stdout.log` and
 `.venv/scout-preview.stderr.log`.
+
+## Direct pip installation on Windows
+
+A clean GitHub pip installation reproduced a `Filename too long` failure while
+pip automatically checked out the optional `ts-mono` source submodule. The fork
+now sets that submodule's default update to `none`: Python installations consume
+the existing built viewer assets. Frontend contributors and frontend CI jobs use
+an explicit `git submodule update --init --recursive --checkout` instead. The
+submodule commit and viewer asset content are unchanged.
