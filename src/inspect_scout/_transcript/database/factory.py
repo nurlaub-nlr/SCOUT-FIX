@@ -1,6 +1,8 @@
 import io
+from urllib.parse import unquote
 
 import pandas as pd
+from upath import UPath
 
 from inspect_scout._query import Column
 from inspect_scout._scanspec import ScanTranscripts
@@ -26,6 +28,9 @@ def transcripts_view(location: str) -> TranscriptsView:
     from inspect_scout._transcript.factory import _location_type
 
     init_environment()
+    # Scout View sends file URIs; filesystem readers need decoded local paths.
+    if location.startswith("file://"):
+        location = UPath(unquote(location)).path
     match _location_type(location):
         case "database":
             return ParquetTranscriptsDB(location, read_only=True)
